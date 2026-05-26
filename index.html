@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanctum.gg — The Diablo IV Knowledge Engine</title>
+  <meta name="description" content="AI-powered companion platform for Diablo IV players. Build guides, patch analysis, gear optimization, and contextual explanations — all in one place.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+       ═══════════════════════════════════════════ */
+    :root {
+      --bg-primary: #0A0A0C;
+      --bg-secondary: #111118;
+      --bg-surface: #1A1A2E;
+      --bg-surface-hover: #222240;
+      --bg-surface-alt: #16162A;
+      --border: #2A2A45;
+      --border-subtle: #1E1E35;
+      --text-primary: #E8E6E3;
+      --text-secondary: #9B9AAF;
+      --text-muted: #6B6A7D;
+      --accent-gold: #D4A853;
+      --accent-gold-dim: #B8923A;
+      --accent-blue: #4A90D9;
+      --accent-blue-dim: #3A70B0;
+      --accent-red: #C0392B;
+      --accent-green: #27AE60;
+      --accent-purple: #8B5CF6;
+      --tier-s: #FF6B35;
+      --tier-a: #D4A853;
+      --tier-b: #4A90D9;
+      --tier-c: #9B9AAF;
+      --glow-gold: rgba(212, 168, 83, 0.15);
+      --glow-blue: rgba(74, 144, 217, 0.12);
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 30px rgba(212, 168, 83, 0.08);
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: var(--accent-gold); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-gold-dim); }
+    img { max-width: 100%; display: block; }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT
+       ═══════════════════════════════════════════ */
+    .app-shell { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+    .content-area {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 32px;
+    }
+
+    /* ═══════════════════════════════════════════
+       SIDEBAR
+       ═══════════════════════════════════════════ */
+    .sidebar-logo {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sidebar-logo h1 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+    }
+    .sidebar-logo span {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 2px;
+    }
+    .sidebar-nav { padding: 12px 0; flex: 1; overflow-y: auto; }
+    .nav-section { padding: 8px 16px 4px; }
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin: 1px 8px;
+    }
+    .nav-item:hover { background: var(--bg-surface); color: var(--text-primary); }
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(212,168,83,0.12), rgba(212,168,83,0.05));
+      color: var(--accent-gold);
+      border: 1px solid rgba(212,168,83,0.15);
+    }
+    .nav-item .icon { width: 18px; text-align: center; font-size: 15px; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--accent-gold);
+      color: var(--bg-primary);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .season-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+    .season-badge .dot {
+      width: 8px; height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+    .season-badge .label { font-size: 12px; color: var(--text-secondary); }
+    .season-badge .label strong { color: var(--text-primary); }
+
+    /* ═══════════════════════════════════════════
+       TOP BAR
+       ═══════════════════════════════════════════ */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 32px;
+      background: rgba(10,10,12,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .search-bar {
+      flex: 1;
+      max-width: 560px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-bar input::placeholder { color: var(--text-muted); }
+    .search-bar input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px var(--glow-gold);
+    }
+    .search-bar .search-icon {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .search-bar .shortcut {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .topbar-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 15px;
+    }
+    .topbar-btn:hover { background: var(--bg-surface); color: var(--text-primary); }
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: var(--bg-primary);
+      cursor: pointer;
+    }
+
+    /* ═══════════════════════════════════════════
+       DASHBOARD
+       ═══════════════════════════════════════════ */
+    .dashboard-header {
+      margin-bottom: 28px;
+    }
+    .dashboard-header h2 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .dashboard-header p { color: var(--text-secondary); font-size: 14px; }
+
+    /* AI Quick Ask */
+    .ai-ask {
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-surface-alt));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ai-ask::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue), var(--accent-purple));
+    }
+    .ai-ask-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .ai-ask-label .sparkle { font-size: 14px; }
+    .ai-ask-input {
+      display: flex;
+      gap: 12px;
+    }
+    .ai-ask-input input {
+      flex: 1;
+      padding: 14px 18px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 15px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ai-ask-input input::placeholder { color: var(--text-muted); }
+    .ai-ask-input input:focus { border-color: var(--accent-blue); }
+    .ai-ask-input button {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dim));
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .ai-ask-input button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(212,168,83,0.3);
+    }
+    .ai-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .ai-suggestion {
+      font-size: 12px;
+      padding: 5px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ai-suggestion:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      background: rgba(212,168,83,0.05);
+    }
+
+    /* Stat Cards */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--border); }
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    .stat-card .change {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .stat-card .change.up { color: var(--accent-green); }
+    .stat-card .change.down { color: var(--accent-red); }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-header h3 {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .section-header .view-all {
+      font-size: 13px;
+      color: var(--accent-gold);
+      cursor: pointer;
+    }
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    /* ═══════════════════════════════════════════
+       BUILD CARDS
+       ═══════════════════════════════════════════ */
+    .build-list { display: flex; flex-direction: column; gap: 10px; }
+    .build-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .build-card:hover {
+      border-color: var(--border);
+      background: var(--bg-surface-hover);
+      box-shadow: var(--shadow-card);
+    }
+    .build-class-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .class-barbarian { background: rgba(200,80,60,0.15); }
+    .class-sorcerer { background: rgba(74,144,217,0.15); }
+    .class-necromancer { background: rgba(120,200,120,0.12); }
+    .class-rogue { background: rgba(139,92,246,0.15); }
+    .class-druid { background: rgba(160,120,60,0.15); }
+    .class-spiritborn { background: rgba(212,168,83,0.15); }
+    .build-info { flex: 1; min-width: 0; }
+    .build-info .name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .build-info .meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .build-tier {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+    .tier-s { background: rgba(255,107,53,0.15); color: var(--tier-s); }
+    .tier-a { background: rgba(212,168,83,0.15); color: var(--tier-a); }
+    .tier-b { background: rgba(74,144,217,0.15); color: var(--tier-b); }
+    .build-stats {
+      display: flex;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .build-stat {
+      text-align: center;
+    }
+    .build-stat .val {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .build-stat .lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════════
+       PATCH PANEL
+       ═══════════════════════════════════════════ */
+    .patch-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .patch-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .patch-header h3 { font-size: 15px; font-weight: 700; }
+    .patch-version {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent-blue);
+      background: rgba(74,144,217,0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .patch-list { padding: 8px 0; }
+    .patch-item {
+      padding: 12px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+    .patch-item:hover { background: var(--bg-surface-hover); }
+    .patch-indicator {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .patch-indicator.buff { background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
+    .patch-indicator.nerf { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
+    .patch-indicator.change { background: var(--accent-blue); box-shadow: 0 0 6px var(--accent-blue); }
+    .patch-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .patch-text strong { color: var(--text-primary); font-weight: 600; }
+    .patch-text .tag {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-left: 6px;
+    }
+    .tag-buff { background: rgba(39,174,96,0.15); color: var(--accent-green); }
+    .tag-nerf { background: rgba(192,57,43,0.15); color: var(--accent-red); }
+
+    /* ═══════════════════════════════════════════
+       DISCOVERIES / TRENDING
+       ═══════════════════════════════════════════ */
+    .discovery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .discovery-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .discovery-card:hover {
+      border-color: var(--border);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+    .discovery-card .source {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .discovery-card .source .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+    .dot-reddit { background: #FF4500; }
+    .dot-discord { background: #5865F2; }
+    .dot-youtube { background: #FF0000; }
+    .discovery-card .title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .discovery-card .excerpt {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .discovery-card .engagement {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ═══════════════════════════════════════════
+       AI CHAT PANEL (inline demo)
+       ═══════════════════════════════════════════ */
+    .chat-demo {
+      margin-top: 28px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .chat-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-header .ai-dot {
+      width: 10px; height: 10px;
+      background: var(--accent-gold);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-gold);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .chat-header h3 { font-size: 14px; font-weight: 600; }
+    .chat-messages { padding: 18px; max-height: 400px; overflow-y: auto; }
+    .chat-msg {
+      margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .chat-msg-user { justify-content: flex-end; }
+    .chat-msg-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .chat-msg-user .chat-msg-avatar {
+      background: var(--accent-blue);
+      color: white;
+      order: 2;
+    }
+    .chat-msg-ai .chat-msg-avatar {
+      background: var(--accent-gold);
+      color: var(--bg-primary);
+      font-weight: 700;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .chat-msg-user .chat-bubble {
+      background: var(--accent-blue);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-msg-ai .chat-bubble {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      color: var(--text-secondary);
+    }
+    .chat-bubble strong { color: var(--text-primary); }
+    .chat-bubble .inline-stat {
+      font-family: var(--font-mono);
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+    .chat-bubble ul {
+      margin: 8px 0 4px 16px;
+      font-size: 13px;
+    }
+    .chat-bubble li { margin-bottom: 4px; }
+    .chat-source {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chat-input-bar {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+    .chat-input-bar input:focus { border-color: var(--accent-gold); }
+    .chat-input-bar button {
+      padding: 10px 16px;
+      background: var(--accent-gold);
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* ═══════════════════════════════════════════
+       MOBILE RESPONSIVE
+       ═══════════════════════════════════════════ */
+    .mobile-header {
+      display: none;
+      padding: 12px 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mobile-header h1 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--accent-gold);
+    }
+    .hamburger {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-secondary); cursor: pointer; font-size: 18px;
+    }
+
+    @media (max-width: 1024px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .discovery-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .mobile-header { display: flex; }
+      .content-area { padding: 16px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .discovery-grid { grid-template-columns: 1fr; }
+      .build-stats { display: none; }
+      .topbar { padding: 12px 16px; }
+      .ai-ask-input { flex-direction: column; }
+      .chat-bubble { max-width: 90%; }
+    }
+
+    /* ═══════════════════════════════════════════
+       UTILITY & ANIMATION
+       ═══════════════════════════════════════════ */
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .proto-badge {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--accent-gold);
+      border-radius: var(--radius-md);
+      padding: 8px 14px;
+      font-size: 11px;
+      color: var(--accent-gold);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .proto-badge a { color: var(--accent-gold); text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <h1>Sanctum.gg</h1>
+  <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+</div>
+
+<div class="app-shell">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>Sanctum.gg</h1>
+      <span>Diablo IV Knowledge Engine</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active"><span class="icon">&#9670;</span> Dashboard</div>
+        <div class="nav-item"><span class="icon">&#9876;</span> Builds <span class="nav-badge">142</span></div>
+        <div class="nav-item"><span class="icon">&#9733;</span> AI Companion</div>
+        <div class="nav-item"><span class="icon">&#128218;</span> Knowledge Base</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Game Data</div>
+        <div class="nav-item"><span class="icon">&#128302;</span> Items &amp; Gear</div>
+        <div class="nav-item"><span class="icon">&#9889;</span> Skills &amp; Trees</div>
+        <div class="nav-item"><span class="icon">&#128200;</span> Mechanics</div>
+        <div class="nav-item"><span class="icon">&#128196;</span> Patch Notes <span class="nav-badge">New</span></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Community</div>
+        <div class="nav-item"><span class="icon">&#128161;</span> Discoveries</div>
+        <div class="nav-item"><span class="icon">&#128293;</span> Trending</div>
+        <div class="nav-item"><span class="icon">&#128101;</span> Contributors</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Personal</div>
+        <div class="nav-item"><span class="icon">&#128100;</span> My Characters</div>
+        <div class="nav-item"><span class="icon">&#128278;</span> Saved Builds</div>
+        <div class="nav-item"><span class="icon">&#9881;</span> Settings</div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="season-badge">
+        <div class="dot"></div>
+        <div class="label"><strong>Season 8</strong> — Hate</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="search-bar">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" placeholder="Search builds, items, mechanics, or ask a question...">
+        <span class="shortcut">/</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" title="Notifications">&#128276;</button>
+        <button class="topbar-btn" title="Theme">&#9790;</button>
+        <div class="avatar">AD</div>
+      </div>
+    </div>
+
+    <div class="content-area fade-in">
+      <!-- Dashboard Header -->
+      <div class="dashboard-header">
+        <h2>Welcome to the Sanctum</h2>
+        <p>Your AI-powered command center for Diablo IV. Season 8 meta at a glance.</p>
+      </div>
+
+      <!-- AI Quick Ask -->
+      <div class="ai-ask">
+        <div class="ai-ask-label">
+          <span class="sparkle">&#10024;</span> Ask the Oracle
+        </div>
+        <div class="ai-ask-input">
+          <input type="text" placeholder="e.g., &quot;Best Spiritborn build for Pit 150+?&quot; or &quot;How does Vulnerable interact with crit?&quot;">
+          <button>Ask</button>
+        </div>
+        <div class="ai-suggestions">
+          <span class="ai-suggestion">What's the current meta?</span>
+          <span class="ai-suggestion">Best starter build for Season 8</span>
+          <span class="ai-suggestion">Explain Tempering</span>
+          <span class="ai-suggestion">Spiritborn vs Sorcerer for Pit?</span>
+          <span class="ai-suggestion">What changed in patch 2.3?</span>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="label">Meta Builds</div>
+          <div class="value" style="color: var(--accent-gold);">142</div>
+          <div class="change up">+12 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Items Tracked</div>
+          <div class="value" style="color: var(--accent-blue);">2,847</div>
+          <div class="change up">+86 new</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Community Discoveries</div>
+          <div class="value" style="color: var(--accent-purple);">318</div>
+          <div class="change up">+24 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Latest Patch</div>
+          <div class="value" style="color: var(--accent-green); font-size: 22px;">v2.3.1</div>
+          <div class="change">3 days ago</div>
+        </div>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="content-grid">
+        <!-- Top Builds -->
+        <div>
+          <div class="section-header">
+            <h3>&#9876; Top Meta Builds</h3>
+            <span class="view-all">View all builds &#8594;</span>
+          </div>
+          <div class="build-list">
+            <div class="build-card">
+              <div class="build-class-icon class-spiritborn">&#129413;</div>
+              <div class="build-info">
+                <div class="name">Quill Volley Spiritborn</div>
+                <div class="meta"><span>Spiritborn</span> <span>&#183;</span> <span>Updated 2h ago</span></div>
+              </div>
+              <div class="build-stats">
+                <div class="build-stat"><div class="val">180+</div><div class="lbl">Pit</div></div>
+                <div class="build-stat"><div class="val">9.8</div><div class="lbl">Rating</div></div>
+              </div>
+              <div class="build-tier tier-s">S</div>
+            </div>
+            <div class="build-card">
+              <div class="build-class-icon class-spiritborn">&#129413;</div>
+              <div class="build-info">
+                <div class="name">Soar Evade Spiritborn</div>
+                <div class="meta"><span>Spiritborn</span> <span>&#183;</span> <span>Updated 5h ago</span></div>
+              </div>
+              <div class="build-stats">
+                <div class="build-stat"><div class="val">170+</div><div class="lbl">Pit</div></div>
+                <div class="build-stat"><div class="val">9.5</div><div class="lbl">Rating</div></div>
+              </div>
+              <div class="build-tier tier-s">S</div>
+            </div>
+            <div class="build-card">
+              <div class="build-class-icon class-sorcerer">&#9889;</div>
+              <div class="build-info">
+                <div class="name">Frozen Orb Sorcerer</div>
+                <div class="meta"><span>Sorcerer</span> <span>&#183;</span> <span>Updated 1d ago</span></div>
+              </div>
+              <div class="build-stats">
+                <div class="build-stat"><div class="val">165+</div><div class="lbl">Pit</div></div>
+                <div class="build-stat"><div class="val">9.2</div><div class="lbl">Rating</div></div>
+              </div>
+              <div class="build-tier tier-s">S</div>
+            </div>
+            <div class="build-card">
+              <div class="build-class-icon class-necromancer">&#128128;</div>
+              <div class="build-info">
+                <div class="name">Minion Necromancer</div>
+                <div class="meta"><span>Necromancer</span> <span>&#183;</span> <span>Updated 8h ago</span></div>
+              </div>
+              <div class="build-stats">
+                <div class="build-stat"><div class="val">160+</div><div class="lbl">Pit</div></div>
+                <div class="build-stat"><div class="val">9.0</div><div class="lbl">Rating</div></div>
+              </div>
+              <div class="build-tier tier-a">A</div>
+            </div>
+            <div class="build-card">
+              <div class="build-class-icon class-barbarian">&#9876;&#65039;</div>
+              <div class="build-info">
+                <div class="name">Bash Barbarian</div>
+                <div class="meta"><span>Barbarian</span> <span>&#183;</span> <span>Updated 12h ago</span></div>
+              </div>
+              <div class="build-stats">
+                <div class="build-stat"><div class="val">155+</div><div class="lbl">Pit</div></div>
+                <div class="build-stat"><div class="val">8.7</div><div class="lbl">Rating</div></div>
+              </div>
+              <div class="build-tier tier-a">A</div>
+            </div>
+            <div class="build-card">
+              <div class="build-class-icon class-rogue">&#128481;</div>
+              <div class="build-info">
+                <div class="name">Heartseeker Rogue</div>
+                <div class="meta"><span>Rogue</span> <span>&#183;</span> <span>Updated 1d ago</span></div>
+              </div>
+              <div class="build-stats">
+                <div class="build-stat"><div class="val">150+</div><div class="lbl">Pit</div></div>
+                <div class="build-stat"><div class="val">8.4</div><div class="lbl">Rating</div></div>
+              </div>
+              <div class="build-tier tier-b">B</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Patch Panel -->
+        <div>
+          <div class="patch-panel">
+            <div class="patch-header">
+              <h3>&#128196; Latest Patch Impact</h3>
+              <span class="patch-version">v2.3.1</span>
+            </div>
+            <div class="patch-list">
+              <div class="patch-item">
+                <div class="patch-indicator buff"></div>
+                <div class="patch-text"><strong>Spiritborn</strong> — Quill Volley base damage increased by 15%. Soar cooldown reduced. <span class="tag tag-buff">Buff</span></div>
+              </div>
+              <div class="patch-item">
+                <div class="patch-indicator nerf"></div>
+                <div class="patch-text"><strong>Sorcerer</strong> — Frozen Orb enchantment proc rate reduced from 30% to 22%. <span class="tag tag-nerf">Nerf</span></div>
+              </div>
+              <div class="patch-item">
+                <div class="patch-indicator buff"></div>
+                <div class="patch-text"><strong>Necromancer</strong> — Minion AI improved significantly. Golem Slam now scales with Summoning skill ranks. <span class="tag tag-buff">Buff</span></div>
+              </div>
+              <div class="patch-item">
+                <div class="patch-indicator change"></div>
+                <div class="patch-text"><strong>Tempering</strong> — New Tempering recipes added for Season 8 uniques. Temper reroll cost reduced by 40%.</div>
+              </div>
+              <div class="patch-item">
+                <div class="patch-indicator nerf"></div>
+                <div class="patch-text"><strong>General</strong> — Pit monster density reduced by ~10% above tier 120. Elites now have 8% more HP. <span class="tag tag-nerf">Nerf</span></div>
+              </div>
+              <div class="patch-item">
+                <div class="patch-indicator buff"></div>
+                <div class="patch-text"><strong>Barbarian</strong> — Bash damage multiplier increased. War Cry now grants 5s of Unstoppable. <span class="tag tag-buff">Buff</span></div>
+              </div>
+              <div class="patch-item">
+                <div class="patch-indicator change"></div>
+                <div class="patch-text"><strong>Items</strong> — 3 new Mythic Unique items added. Harlequin Crest Uber drop rate increased by 25%.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community Discoveries -->
+      <div class="section-header">
+        <h3>&#128161; Trending Discoveries</h3>
+        <span class="view-all">View all &#8594;</span>
+      </div>
+      <div class="discovery-grid">
+        <div class="discovery-card">
+          <div class="source"><span class="dot dot-reddit"></span> Reddit</div>
+          <div class="title">Hidden interaction: Moonrise + Quill Volley creates permanent uptime on Eagle stacks</div>
+          <div class="excerpt">Found a niche synergy that most build guides are missing. When you combine the Moonrise unique with Quill Volley, the Eagle spirit stacks never fall off due to...</div>
+          <div class="engagement"><span>&#9650; 847</span> <span>&#128172; 124</span> <span>2h ago</span></div>
+        </div>
+        <div class="discovery-card">
+          <div class="source"><span class="dot dot-discord"></span> Discord</div>
+          <div class="title">Tempering breakpoint chart for Season 8 — all classes</div>
+          <div class="excerpt">Compiled the complete tempering breakpoint data for every class in S8. Key finding: the new tempering recipes have hidden diminishing returns above 3 rerolls...</div>
+          <div class="engagement"><span>&#9650; 632</span> <span>&#128172; 89</span> <span>5h ago</span></div>
+        </div>
+        <div class="discovery-card">
+          <div class="source"><span class="dot dot-youtube"></span> YouTube</div>
+          <div class="title">Pit 200 cleared — world first Sorcerer with unconventional Blizzard build</div>
+          <div class="excerpt">Against all expectations, a Sorcerer just cleared Pit 200 using a Blizzard build that nobody had on their radar. The key innovation is using Frost Nova...</div>
+          <div class="engagement"><span>&#9650; 1.2K</span> <span>&#128172; 256</span> <span>8h ago</span></div>
+        </div>
+      </div>
+
+      <!-- AI Chat Demo -->
+      <div class="chat-demo" style="margin-top: 28px;">
+        <div class="chat-header">
+          <div class="ai-dot"></div>
+          <h3>Sanctum Oracle — AI Companion</h3>
+        </div>
+        <div class="chat-messages">
+          <div class="chat-msg chat-msg-user">
+            <div class="chat-msg-avatar">AD</div>
+            <div class="chat-bubble">What's the best build for pushing Pit 150+ as a new Spiritborn?</div>
+          </div>
+          <div class="chat-msg chat-msg-ai">
+            <div class="chat-msg-avatar">S</div>
+            <div class="chat-bubble">
+              <strong>For Pit 150+ as Spiritborn, Quill Volley is your best bet.</strong> It's currently the highest-performing build in the game, and relatively accessible to gear.
+              <br><br>
+              <strong>Why Quill Volley?</strong>
+              <ul>
+                <li><strong>Damage:</strong> Quill Volley scales exceptionally with the Eagle spirit, dealing <span class="inline-stat">~2.4T DPS</span> with mid-tier gear</li>
+                <li><strong>Survivability:</strong> Built-in dodge from Eagle spirit + Soar for repositioning</li>
+                <li><strong>Clear speed:</strong> Excellent AoE for both trash and elites</li>
+              </ul>
+              <br>
+              <strong>Key gear priorities:</strong>
+              <ul>
+                <li>Moonrise (unique amulet) — essential for Eagle stack uptime</li>
+                <li>Tempest Roar (helm) — if you don't have Harlequin Crest</li>
+                <li>Temper for Quill Volley ranks and Crit Damage</li>
+              </ul>
+              <br>
+              Want me to break down the full skill tree and paragon board setup?
+              <div class="chat-source">&#128214; Sources: Maxroll S8 tier list, wudijo Pit 180 clear, r/diablo4 megathread</div>
+            </div>
+          </div>
+          <div class="chat-msg chat-msg-user">
+            <div class="chat-msg-avatar">AD</div>
+            <div class="chat-bubble">Yes, and what's the minimum gear I need before attempting Pit 150?</div>
+          </div>
+          <div class="chat-msg chat-msg-ai">
+            <div class="chat-msg-avatar">S</div>
+            <div class="chat-bubble">
+              <strong>Minimum gear checklist for Pit 150:</strong>
+              <ul>
+                <li><strong>Weapon:</strong> Any GA polearm with <span class="inline-stat">3/4 Greater Affixes</span> — prioritize Crit Damage and Vulnerable Damage</li>
+                <li><strong>Moonrise amulet:</strong> Non-negotiable for this build</li>
+                <li><strong>Armor:</strong> At least <span class="inline-stat">18,000+ armor</span> (aim for 20K+)</li>
+                <li><strong>Tempering:</strong> Quill Volley ranks on both weapons, Crit Damage on jewelry</li>
+                <li><strong>Paragon:</strong> Complete Eagle + Centipede boards with all rare glyphs at level 15+</li>
+                <li><strong>Resistances:</strong> All at <span class="inline-stat">70%+</span> after Paragon</li>
+              </ul>
+              <br>
+              With this setup, Pit 150 should be comfortable. For 160+, you'll want to start farming for Mythic uniques and leveling glyphs to 21.
+              <div class="chat-source">&#128214; Sources: wudijo gear guide, community DPS calculator, patch 2.3 resistance formula</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" placeholder="Ask anything about Diablo IV...">
+          <button>Send</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Prototype Badge -->
+<div class="proto-badge">
+  &#128736; Prototype — <a href="https://github.com/AlvoroLabs/sanctum-gg-the-diablo-iv-knowledge-engine" target="_blank">View on GitHub</a>
+</div>
+
+<script>
+  // Close sidebar on mobile when clicking outside
+  document.addEventListener('click', (e) => {
+    const sidebar = document.querySelector('.sidebar');
+    const hamburger = document.querySelector('.hamburger');
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open') &&
+        !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Nav item click handler
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      if (window.innerWidth <= 768) {
+        document.querySelector('.sidebar').classList.remove('open');
+      }
+    });
+  });
+
+  // AI suggestion click
+  document.querySelectorAll('.ai-suggestion').forEach(s => {
+    s.addEventListener('click', () => {
+      document.querySelector('.ai-ask-input input').value = s.textContent;
+      document.querySelector('.ai-ask-input input').focus();
+    });
+  });
+</script>
+</body>
+</html>

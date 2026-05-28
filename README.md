@@ -82,3 +82,15 @@ Open `http://localhost:3000`.
 - [PRODUCT_PRD.md](./PRODUCT_PRD.md) — product requirements
 - [ROADMAP.md](./ROADMAP.md) — phased delivery plan
 - [COPY_DECK.md](./COPY_DECK.md) — messaging and UI copy system
+
+## Cursor Cloud environment defaults
+
+Repo-level cloud agent setup is configured in:
+
+- `.cursor/environment.json`
+- `.cursor/Dockerfile`
+
+This pins agents to Node 22 and runs default setup:
+
+- `npm ci`
+- `npm run prisma:generate`

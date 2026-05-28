@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PlayerProfile {
+  id              String          @id @default(cuid())
+  battletag       String?
+  preferredClass  String?
+  primaryObjective String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  buildSnapshots  BuildSnapshot[]
+  diagnoses       DiagnosisReport[]
+}
+
+model BuildSnapshot {
+  id                 String           @id @default(cuid())
+  profileId          String?
+  profile            PlayerProfile?   @relation(fields: [profileId], references: [id], onDelete: SetNull)
+  className          String
+  archetype          String
+  pitTier            Int
+  gearScore          Int
+  armor              Int
+  resistance         Int
+  vulnerableUptime   Int
+  resourceGeneration Int
+  notes              String?
+  createdAt          DateTime         @default(now())
+  diagnoses          DiagnosisReport[]
+}
+
+model DiagnosisReport {
+  id                 String           @id @default(cuid())
+  profileId          String?
+  profile            PlayerProfile?   @relation(fields: [profileId], references: [id], onDelete: SetNull)
+  buildSnapshotId    String
+  buildSnapshot      BuildSnapshot    @relation(fields: [buildSnapshotId], references: [id], onDelete: Cascade)
+  issue              String
+  cause              String
+  impactPercent      Int
+  action             String
+  confidencePercent  Int
+  evidence           Json
+  createdAt          DateTime         @default(now())
+  recommendations    Recommendation[]
+}
+
+model Recommendation {
+  id                 String                @id @default(cuid())
+  diagnosisReportId  String
+  diagnosisReport    DiagnosisReport       @relation(fields: [diagnosisReportId], references: [id], onDelete: Cascade)
+  priority           Int
+  title              String
+  rationale          String
+  expectedGain       String
+  status             RecommendationStatus  @default(PENDING)
+  createdAt          DateTime              @default(now())
+}
+
+enum RecommendationStatus {
+  PENDING
+  ACCEPTED
+  DISMISSED
+}
+
+model LiveSignal {
+  id         String   @id @default(cuid())
+  category   String
+  headline   String
+  detail     String
+  severity   String
+  createdAt  DateTime @default(now())
+}

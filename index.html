@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sanctum | Diablo IV Intelligence Engine</title>
-  <meta name="description" content="Sanctum helps Diablo IV players fix weak builds, understand mechanics, optimize progression, and push higher Pit tiers with AI-native guidance.">
+  <title>Sanctum | Diablo IV Decision Engine</title>
+  <meta name="description" content="Sanctum diagnoses weak Diablo IV builds, prioritizes upgrades, and tells players what to do next with evidence-backed progression guidance.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -131,6 +131,7 @@
       cursor: pointer;
       font-family: inherit;
       font-weight: 700;
+      min-height: 42px;
       transition: transform 120ms ease, box-shadow 160ms ease, border-color 160ms ease;
     }
 
@@ -345,6 +346,7 @@
       color: var(--text-2);
       border-radius: 999px;
       padding: 0.4rem 0.72rem;
+      min-height: 38px;
       font-size: 0.78rem;
       cursor: pointer;
       transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
@@ -492,6 +494,7 @@
 
     .section {
       margin-top: 2rem;
+      scroll-margin-top: 92px;
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       background: linear-gradient(180deg, rgba(16, 16, 24, 0.92), rgba(12, 12, 18, 0.9));
@@ -928,21 +931,49 @@
       }
 
       .top-nav-inner {
-        min-height: 64px;
+        min-height: auto;
+        padding: 0.6rem 0;
+        gap: 0.75rem;
+        flex-wrap: wrap;
       }
 
       .nav-links {
         display: none;
       }
 
+      .brand {
+        min-width: 0;
+      }
+
+      .brand-text span {
+        display: none;
+      }
+
       .nav-ctas {
-        margin-left: auto;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nav-ctas .btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 0.6rem 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      .announce-bar {
+        font-size: 0.78rem;
       }
 
       .hero,
       .section,
       .final-cta {
         padding: 1.15rem;
+      }
+
+      .section-title {
+        align-items: start;
       }
 
       h1 {
@@ -955,6 +986,25 @@
 
       .ask-row {
         flex-direction: column;
+      }
+
+      .ask-row .btn {
+        width: 100%;
+      }
+
+      .hero-prompts {
+        gap: 0.45rem;
+      }
+
+      .prompt {
+        width: 100%;
+        text-align: left;
+        border-radius: 10px;
+        font-size: 0.8rem;
+      }
+
+      .hero-actions .btn-sm {
+        min-height: 40px;
       }
 
       .hero-proof {
@@ -974,6 +1024,7 @@
 
       .compare-grid .cell {
         border-right: none;
+        padding: 0.7rem;
       }
 
       .compare-grid .cell.head {
@@ -982,6 +1033,35 @@
 
       .compare-grid .cell.label {
         border-top: 1px solid var(--line-soft);
+      }
+
+      .compare-grid .cell:not(.label):not(.head) {
+        position: relative;
+        padding-top: 1.45rem;
+      }
+
+      .compare-grid .cell:nth-child(3n-1):not(.head)::before,
+      .compare-grid .cell:nth-child(3n):not(.head)::before {
+        position: absolute;
+        top: 0.42rem;
+        left: 0.7rem;
+        font-size: 0.63rem;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .compare-grid .cell:nth-child(3n-1):not(.head)::before {
+        content: "Guide/planner";
+        color: #b8b5c6;
+      }
+
+      .compare-grid .cell:nth-child(3n):not(.head)::before {
+        content: "Sanctum";
+        color: #ccefd9;
+      }
+
+      .proto-badge {
+        display: none;
       }
     }
   </style>
@@ -993,7 +1073,7 @@
         <div class="brand-mark">S</div>
         <div class="brand-text">
           <strong>SANCTUM</strong>
-          <span>Diablo IV Intelligence Engine</span>
+          <span>Diablo IV Decision Engine</span>
         </div>
       </div>
       <nav class="nav-links">
@@ -1001,32 +1081,32 @@
         <a href="#journeys">Workflows</a>
         <a href="#alive">Live Hub</a>
         <a href="#difference">Why Sanctum</a>
-        <a href="#plans">Plans</a>
+        <a href="#plans">Trust</a>
       </nav>
       <div class="nav-ctas">
-        <button id="nav-free-btn" class="btn btn-ghost" type="button">Start free</button>
-        <button id="nav-pro-btn" class="btn btn-pro" type="button">Unlock Sanctum Pro</button>
+        <button id="nav-free-btn" class="btn btn-ghost" type="button">Run diagnosis</button>
+        <button id="nav-pro-btn" class="btn btn-pro" type="button">Trust model</button>
       </div>
     </div>
   </header>
 
   <main class="container">
     <div class="announce-bar" role="status" aria-live="polite">
-      <div><strong>Founder access:</strong> Free includes 20 AI analyses/month. Pro unlocks unlimited analyses, deep diagnosis, and live meta alerts.</div>
+      <div><strong>Decision-first output:</strong> Every recommendation includes why it works, expected impact, and evidence before you commit your next run.</div>
       <div class="announce-badges">
-        <span>Instant answers</span>
+        <span>Diagnosis first</span>
         <span>Source-grounded</span>
-        <span>Cancel anytime</span>
+        <span>Confidence scored</span>
       </div>
     </div>
 
     <section class="hero" aria-labelledby="hero-title">
       <div>
-        <div class="eyebrow">AI-native Diablo progression assistant</div>
-        <h1 id="hero-title">Solve Diablo IV problems faster with intelligent guidance, not static pages.</h1>
+        <div class="eyebrow">Intelligent progression and decision engine</div>
+        <h1 id="hero-title">Know exactly what to do next in Diablo IV.</h1>
         <p class="hero-sub">
-          Sanctum is the interface layer over Diablo complexity: diagnose weak builds, decode mechanics, adapt to seasonal shifts,
-          and get a clear answer on what to farm next.
+          Sanctum diagnoses build failures, prioritizes upgrades, and gives tactical progression calls tailored to your current state.
+          No tab-hopping through static guides.
         </p>
         <div class="hero-funnel" aria-label="Sanctum first interaction flow">
           <span>1. Describe your blocker</span>
@@ -1035,9 +1115,9 @@
         </div>
 
         <div class="ask-shell">
-          <span class="ask-caption">Start here - ask your current Diablo problem</span>
+          <span class="ask-caption">Start here - describe your blocker</span>
           <div class="ask-row">
-            <input id="hero-input" type="text" placeholder="Ask Sanctum anything about your build, meta, or progression...">
+            <input id="hero-input" type="text" placeholder="Why am I stuck? What should I fix first? What should I farm next?">
             <button id="hero-ask-btn" class="btn btn-primary" type="button">Analyze now</button>
           </div>
           <div class="hero-prompts">
@@ -1050,7 +1130,7 @@
           <div class="hero-actions">
             <button id="sample-diagnosis-btn" class="btn btn-ghost btn-sm" type="button">Try sample build diagnosis</button>
             <button id="progression-shortcut-btn" class="btn btn-ghost btn-sm" type="button">Give me a progression shortcut</button>
-            <button id="view-plans-btn" class="btn btn-ghost btn-sm" type="button">View plans</button>
+            <button id="view-plans-btn" class="btn btn-ghost btn-sm" type="button">See trust model</button>
           </div>
           <p class="hero-note">No tab-hopping. No guesswork. Ask once and get a prioritized next-step plan.</p>
         </div>
@@ -1100,7 +1180,7 @@
               <span>Community sim data</span>
             </div>
           </div>
-          <button class="btn btn-ghost" type="button">Open full guided plan</button>
+          <button class="btn btn-ghost" type="button">Open full diagnostic report</button>
         </div>
       </aside>
     </section>
@@ -1108,7 +1188,7 @@
     <section id="start" class="section">
       <div class="section-title">
         <h2>Your first win in 30 seconds</h2>
-        <p>Choose what you need right now. Sanctum will preload the right prompt and immediately show useful output.</p>
+        <p>The first ten seconds should remove confusion. Pick an intent and Sanctum returns a usable recommendation immediately.</p>
       </div>
       <div class="quick-grid">
         <article class="quick-card">
@@ -1255,20 +1335,20 @@
     <section id="difference" class="section">
       <div class="section-title">
         <h2>Why Sanctum is different</h2>
-        <p>Static sources provide fragments. Sanctum understands context and returns progression-ready decisions tailored to your current state.</p>
+        <p>Maxroll, Mobalytics, D4Builds, and guide portals are strong at information delivery. Sanctum is built for interpretation and decision support.</p>
       </div>
       <div class="comparison">
         <div class="compare-grid">
           <div class="cell head">Category</div>
-          <div class="cell head">Static sources</div>
+          <div class="cell head">Guide and planner pattern</div>
           <div class="cell head">Sanctum intelligence layer</div>
 
           <div class="cell label">Build advice</div>
-          <div class="cell">Generic tier list entries with no diagnosis.</div>
+          <div class="cell">Tier lists and planner links without player-specific diagnosis.</div>
           <div class="cell good">Pinpoints why your exact build fails and prioritizes fixes by impact.</div>
 
           <div class="cell label">Patch understanding</div>
-          <div class="cell">Raw notes, scattered videos, and delayed updates.</div>
+          <div class="cell">Raw notes, creator videos, and fragmented interpretations.</div>
           <div class="cell good">Instant summaries by class and playstyle with practical implications.</div>
 
           <div class="cell label">Progression guidance</div>
@@ -1276,7 +1356,7 @@
           <div class="cell good">Clear next action plan based on your gear, glyphs, and Pit goals.</div>
 
           <div class="cell label">Knowledge quality</div>
-          <div class="cell">Fragmented and hard to verify.</div>
+          <div class="cell">Conflicting advice, low transparency on recommendation confidence.</div>
           <div class="cell good">Multi-source answers with context, confidence, and traceable evidence.</div>
 
           <div class="cell label end">Time to clarity</div>
@@ -1285,56 +1365,56 @@
         </div>
       </div>
       <div class="trust-notes">
-        <span class="pill">Contextual understanding over static lookup</span>
+        <span class="pill">Interpretation over static lookup</span>
         <span class="pill">Personalized guidance for each account state</span>
-        <span class="pill">Fast decisions for real progression gains</span>
+        <span class="pill">Prioritized decisions for progression gains</span>
         <span class="pill">Updated with live signals every few minutes</span>
       </div>
     </section>
 
     <section id="plans" class="section">
       <div class="section-title">
-        <h2>Simple plans for real progression</h2>
-        <p>Start free and upgrade only when you want deeper diagnostics and always-on meta awareness.</p>
+        <h2>Trust and accuracy by design</h2>
+        <p>Sanctum recommendations are structured to be inspectable, not magical. Players can always see reasoning, assumptions, and evidence.</p>
       </div>
       <div class="plans-grid">
         <article class="plan-card">
-          <h3>Sanctum Free</h3>
-          <div class="plan-price">$0 / month</div>
+          <h3>Recommendation contract</h3>
+          <div class="plan-price">Always visible</div>
           <ul>
-            <li>20 AI analyses per month</li>
-            <li>Core build, meta, and progression Q&A</li>
-            <li>Live community hub access</li>
-            <li>Basic source citations</li>
+            <li>Issue -> Cause -> Impact -> Action format</li>
+            <li>Confidence tag on every major recommendation</li>
+            <li>Explicit assumptions and context window</li>
+            <li>Expected gain and risk callout</li>
           </ul>
-          <button id="plans-free-btn" class="btn btn-ghost" type="button">Continue with Free</button>
+          <button id="plans-free-btn" class="btn btn-ghost" type="button">Preview trust checklist</button>
         </article>
         <article class="plan-card featured">
-          <div class="plan-tag">Most used by push players</div>
-          <h3>Sanctum Pro</h3>
-          <div class="plan-price">$12 / month</div>
+          <div class="plan-tag">Reliability systems</div>
+          <h3>Decision quality safeguards</h3>
+          <div class="plan-price">Mechanics grounded</div>
           <ul>
-            <li>Unlimited AI analyses</li>
-            <li>Deep build autopsy with impact scoring</li>
-            <li>Patch and meta change alerts for your classes</li>
-            <li>Adaptive progression route planner</li>
+            <li>Patch-version and mechanic references</li>
+            <li>Stale-data detection on patch rollovers</li>
+            <li>Cross-checking with deterministic calculators</li>
+            <li>Low-confidence fallback behavior</li>
           </ul>
-          <button id="plans-pro-btn" class="btn btn-pro" type="button">Start 7-day Pro trial</button>
+          <button id="plans-pro-btn" class="btn btn-pro" type="button">Open reliability spec</button>
         </article>
       </div>
-      <p class="plans-footnote">No lock-in. Downgrade anytime. All plan upgrades preserve your history and prior analyses.</p>
+      <p class="plans-footnote">Trust is a product surface: every answer should be auditable by players, creators, and competitive users.</p>
     </section>
 
     <section class="final-cta">
-      <h2>Stop tab-hopping. Start progressing.</h2>
-      <p>Ask one question, get a grounded answer, and know your next move instantly. Start with build diagnosis, meta summary, or progression planning.</p>
+      <h2>Stop guessing. Start executing.</h2>
+      <p>One question should produce one clear next move. Start with build diagnosis, progression planning, or seasonal impact.</p>
       <div class="actions">
         <button id="final-diagnosis-btn" class="btn btn-primary" type="button">Start with a build diagnosis</button>
-        <button id="final-pro-btn" class="btn btn-pro" type="button">Start 7-day Pro trial</button>
+        <button id="final-pro-btn" class="btn btn-pro" type="button">See seasonal impact brief</button>
       </div>
     </section>
 
-    <p class="foot">Sanctum is not another Diablo database. It is your intelligent interface layer over Diablo IV complexity.</p>
+    <p class="foot">Sanctum is not another build site. It is the intelligent operating system for Diablo IV progression decisions.</p>
   </main>
 
   <div class="proto-badge">
@@ -1391,6 +1471,16 @@
         answer: "<strong>Deep build autopsy ready:</strong> Sanctum ranked your top five upgrades by expected Pit gain and detected two hidden survivability bottlenecks.",
         actions: "Upgrade order: 1) chest defensive affix reroll, 2) glyph route correction, 3) resource temper swap, 4) boss farm target change, 5) elixir/paragon synergy alignment.",
         sources: ["Gear impact model", "Top ladder breakpoints", "Live route efficiency tracker"],
+      },
+      "Show me the recommendation trust checklist": {
+        answer: "<strong>Trust checklist:</strong> each recommendation contains issue, cause, impact estimate, action priority, confidence, and assumptions.",
+        actions: "Open any diagnosis card to inspect evidence links, patch version context, and expected gain before applying changes.",
+        sources: ["Recommendation contract", "Trust scoring service", "Patch freshness validator"],
+      },
+      "How does Sanctum validate recommendation accuracy?": {
+        answer: "<strong>Validation model:</strong> Sanctum cross-checks recommendations with deterministic calculators and patch-version constraints before rendering high-confidence calls.",
+        actions: "When confidence drops, Sanctum labels uncertainty, requests missing build details, and falls back to safer progression recommendations.",
+        sources: ["Deterministic analyzer logs", "Confidence thresholds", "Versioned mechanics rules"],
       },
     };
 
@@ -1463,12 +1553,12 @@
     });
 
     plansFreeBtn.addEventListener("click", () => {
-      runPrompt("Best speedfarming build this season", true);
+      runPrompt("Show me the recommendation trust checklist", true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     plansProBtn.addEventListener("click", () => {
-      runPrompt("Diagnose my build and rank my top 5 upgrades for Pit pushing", true);
+      runPrompt("How does Sanctum validate recommendation accuracy?", true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
@@ -1478,7 +1568,8 @@
     });
 
     finalProBtn.addEventListener("click", () => {
-      scrollToPlans();
+      runPrompt("Summarize Season 13 changes", true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     input.addEventListener("keydown", (event) => {

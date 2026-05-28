@@ -1,54 +1,53 @@
-# Sanctum.gg — The Diablo IV Knowledge Engine
+# Sanctum.gg — Diablo IV Decision Engine
 
-An AI-powered companion platform for Diablo IV players that consolidates fragmented build guides, patch notes, item mechanics, and community discoveries into one intelligent experience.
+Sanctum is designed as the **intelligent progression and decision engine for Diablo IV**, not another build database or static guide site.
 
-## Overview
+It helps players answer the hardest practical questions:
 
-Instead of searching across Reddit, Maxroll, YouTube, and Discord, players can instantly understand how builds work, compare variants, optimize gear, and get contextual explanations tailored to their character and progression.
+- Why is my build failing at this tier?
+- What should I upgrade first?
+- What should I farm next?
+- Should I adapt this build or switch now?
+- What changed this season that affects me?
 
-## Links
+## Product Direction
 
-- **Preview**: [alvoro-sanctum-gg-the-diablo-iv-knowledge-engine.netlify.app](https://alvoro-sanctum-gg-the-diablo-iv-knowledge-engine.netlify.app)
-- **Implementation Plan**: [PLAN.md](./PLAN.md)
-- **Issue**: [AlvoroLabs/alvorolabs#9](https://github.com/AlvoroLabs/alvorolabs/issues/9)
+Sanctum differentiates through:
 
-## Tech Stack
+- **Build diagnosis** (root cause + fix priority)
+- **Progression intelligence** (next-best-action planning)
+- **Seasonal intelligence** (re-entry and meta adaptation)
+- **Trust architecture** (reasoning, evidence, confidence)
+- **Persistent personalization** (player memory across seasons)
 
-- **Frontend**: HTML/CSS/JS (prototype) → Next.js 15 (production)
-- **Styling**: Custom CSS with design tokens → Tailwind CSS
-- **AI**: OpenAI GPT-4o / Claude API (planned)
-- **Database**: Supabase (PostgreSQL + pgvector) (planned)
-- **Hosting**: Netlify
+See full docs:
 
-## Getting Started
+- [PLAN.md](./PLAN.md) — platform architecture and operating model
+- [PRODUCT_PRD.md](./PRODUCT_PRD.md) — full product requirements and UX specification
+- [ROADMAP.md](./ROADMAP.md) — v1/v2/v3 scope cut and delivery sequence
 
-This is currently a static prototype. To run locally:
+## Prototype
+
+`index.html` is a high-fidelity static prototype demonstrating:
+
+- first-10-second onboarding
+- live intelligence hub UX
+- diagnosis and progression output patterns
+- trust, evidence, and confidence surfaces
+
+Run locally:
 
 ```bash
-# Just open index.html in a browser, or:
 npx serve .
 ```
 
-## Automation
+## Tech Direction
 
-- **CI (GitHub Actions)**: `.github/workflows/ci.yml` runs on pull requests, pushes to `main`, and manual dispatch.
-- **Netlify config**: `netlify.toml` defines static publish settings and SPA-style fallback redirects.
-- **Auto-deploy expectation**: Netlify must be connected to this repository with `main` as the production branch for deploys to trigger on merge.
+- **Current**: static HTML/CSS/JS prototype
+- **Target app**: Next.js 15 + Supabase + edge inference orchestration
+- **Core intelligence systems**: deterministic analyzers + evidence-grounded language layer
 
-## Project Structure
+## Deployment
 
-```
-├── index.html          # Main application prototype
-├── PLAN.md             # Full implementation plan & analysis
-├── README.md           # This file
-├── public/             # Static assets
-└── src/                # Source files (for future builds)
-```
-
-## Status
-
-**Phase**: Initial prototype / Design review
-
----
-
-*Built by [Alvoro Labs](https://alvorolabs.ai)*
+- Netlify config is in `netlify.toml`
+- CI workflow runs in `.github/workflows/ci.yml`

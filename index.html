@@ -145,6 +145,13 @@
       box-shadow: 0 10px 24px rgba(218, 168, 88, 0.25);
     }
 
+    .btn-pro {
+      padding: 0.75rem 1.1rem;
+      background: linear-gradient(135deg, #f4d39b, #d79c45);
+      color: #1a140b;
+      box-shadow: 0 10px 24px rgba(218, 168, 88, 0.3);
+    }
+
     .btn-ghost {
       padding: 0.7rem 1.05rem;
       border: 1px solid var(--line);
@@ -160,6 +167,49 @@
     .btn-sm {
       padding: 0.5rem 0.8rem;
       font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .nav-ctas {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .announce-bar {
+      margin-top: 1rem;
+      border: 1px solid rgba(218, 168, 88, 0.38);
+      border-radius: var(--radius-md);
+      padding: 0.68rem 0.82rem;
+      background: linear-gradient(90deg, rgba(41, 30, 13, 0.55), rgba(18, 16, 24, 0.9));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      color: #e9d8b9;
+      font-size: 0.82rem;
+    }
+
+    .announce-bar strong {
+      color: #f7e2bd;
+    }
+
+    .announce-badges {
+      display: inline-flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .announce-badges span {
+      border: 1px solid rgba(218, 168, 88, 0.3);
+      border-radius: 999px;
+      padding: 0.18rem 0.52rem;
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(13, 12, 18, 0.7);
+      color: #f5dfb1;
       font-weight: 700;
     }
 
@@ -515,6 +565,24 @@
       color: #f5dfb5;
     }
 
+    .journey-upsell {
+      margin-top: 0.2rem;
+      border: 1px solid rgba(218, 168, 88, 0.3);
+      border-radius: 10px;
+      background: rgba(40, 30, 14, 0.35);
+      padding: 0.45rem 0.55rem;
+      color: #f0dfc0;
+      font-size: 0.73rem;
+    }
+
+    .journey-upsell strong {
+      color: #f6e6c4;
+      margin-right: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.66rem;
+    }
+
     .journey {
       border: 1px solid var(--line-soft);
       background: linear-gradient(180deg, rgba(23, 23, 35, 0.94), rgba(17, 17, 26, 0.92));
@@ -741,6 +809,73 @@
       flex-wrap: wrap;
     }
 
+    .plans-grid {
+      margin-top: 1.05rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .plan-card {
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(20, 20, 30, 0.92), rgba(14, 14, 22, 0.94));
+      padding: 1rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .plan-card h3 {
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    .plan-price {
+      font-family: "JetBrains Mono", monospace;
+      color: #f8e5bf;
+      font-size: 1.1rem;
+    }
+
+    .plan-card ul {
+      list-style: none;
+      display: grid;
+      gap: 0.36rem;
+      color: #d2d0dd;
+      font-size: 0.83rem;
+    }
+
+    .plan-card li::before {
+      content: ">";
+      color: var(--gold);
+      margin-right: 0.4rem;
+      font-weight: 700;
+    }
+
+    .plan-card.featured {
+      border-color: rgba(218, 168, 88, 0.46);
+      box-shadow: inset 0 0 0 1px rgba(218, 168, 88, 0.25);
+      background: linear-gradient(180deg, rgba(40, 31, 16, 0.5), rgba(14, 14, 22, 0.95));
+    }
+
+    .plan-tag {
+      width: fit-content;
+      border: 1px solid rgba(218, 168, 88, 0.4);
+      border-radius: 999px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #f5dfb5;
+      background: rgba(34, 27, 13, 0.7);
+      font-weight: 700;
+    }
+
+    .plans-footnote {
+      margin-top: 0.7rem;
+      color: var(--text-3);
+      font-size: 0.75rem;
+    }
+
     .foot {
       margin-top: 1.4rem;
       color: var(--text-3);
@@ -777,7 +912,8 @@
 
       .quick-grid,
       .journeys,
-      .alive-grid {
+      .alive-grid,
+      .plans-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -797,6 +933,10 @@
 
       .nav-links {
         display: none;
+      }
+
+      .nav-ctas {
+        margin-left: auto;
       }
 
       .hero,
@@ -823,7 +963,8 @@
 
       .quick-grid,
       .journeys,
-      .alive-grid {
+      .alive-grid,
+      .plans-grid {
         grid-template-columns: 1fr;
       }
 
@@ -860,12 +1001,25 @@
         <a href="#journeys">Workflows</a>
         <a href="#alive">Live Hub</a>
         <a href="#difference">Why Sanctum</a>
+        <a href="#plans">Plans</a>
       </nav>
-      <button class="btn btn-primary">Enter Sanctum</button>
+      <div class="nav-ctas">
+        <button id="nav-free-btn" class="btn btn-ghost" type="button">Start free</button>
+        <button id="nav-pro-btn" class="btn btn-pro" type="button">Unlock Sanctum Pro</button>
+      </div>
     </div>
   </header>
 
   <main class="container">
+    <div class="announce-bar" role="status" aria-live="polite">
+      <div><strong>Founder access:</strong> Free includes 20 AI analyses/month. Pro unlocks unlimited analyses, deep diagnosis, and live meta alerts.</div>
+      <div class="announce-badges">
+        <span>Instant answers</span>
+        <span>Source-grounded</span>
+        <span>Cancel anytime</span>
+      </div>
+    </div>
+
     <section class="hero" aria-labelledby="hero-title">
       <div>
         <div class="eyebrow">AI-native Diablo progression assistant</div>
@@ -896,6 +1050,7 @@
           <div class="hero-actions">
             <button id="sample-diagnosis-btn" class="btn btn-ghost btn-sm" type="button">Try sample build diagnosis</button>
             <button id="progression-shortcut-btn" class="btn btn-ghost btn-sm" type="button">Give me a progression shortcut</button>
+            <button id="view-plans-btn" class="btn btn-ghost btn-sm" type="button">View plans</button>
           </div>
           <p class="hero-note">No tab-hopping. No guesswork. Ask once and get a prioritized next-step plan.</p>
         </div>
@@ -996,6 +1151,7 @@
             <strong>Build health score: 62/100</strong><br>
             Damage loss: overpower uptime only 38%. Move 6 paragon nodes and reroll gloves to +Mighty Throw ranks first.
           </div>
+          <div class="journey-upsell"><strong>Pro:</strong> full build autopsy with gear-by-gear replacement paths and expected DPS deltas.</div>
           <button class="btn btn-ghost" type="button">Upload build for diagnosis</button>
         </article>
 
@@ -1011,6 +1167,7 @@
             <small>Example output</small>
             <strong>Season shift:</strong> shadow necro moved from A tier to S tier after corpse generation buffs, outperforming previous pit clears by 11%.
           </div>
+          <div class="journey-upsell"><strong>Pro:</strong> role-specific meta alerts when your class moves tier or a patch affects your build.</div>
           <button class="btn btn-ghost" type="button">View live meta digest</button>
         </article>
 
@@ -1026,6 +1183,7 @@
             <small>Example output</small>
             <strong>Next 45 minutes:</strong> run Zir x3 for amulet chase, then Pit 82 speed loop until glyph rank 19. Expected +2 Pit levels today.
           </div>
+          <div class="journey-upsell"><strong>Pro:</strong> personalized progression routes that adapt after each analyzed run.</div>
           <button class="btn btn-ghost" type="button">Build my progression plan</button>
         </article>
       </div>
@@ -1079,7 +1237,7 @@
           <ul class="alive-list">
             <li>Frozen Orb proc nerf moved build to high-A tier <span class="tag red">Nerf</span></li>
             <li>Companion druid AI fix improved boss uptime <span class="tag green">Buff</span></li>
-            <li>Lucky hit cap interaction clarified by new testing <span class="tag blue">Updated</span></li>
+            <li>Lucky hit cap interaction clarified by new testing <span class="tag blue">Updated</span> <span class="tag gold">Pro signal</span></li>
           </ul>
         </article>
 
@@ -1134,12 +1292,45 @@
       </div>
     </section>
 
+    <section id="plans" class="section">
+      <div class="section-title">
+        <h2>Simple plans for real progression</h2>
+        <p>Start free and upgrade only when you want deeper diagnostics and always-on meta awareness.</p>
+      </div>
+      <div class="plans-grid">
+        <article class="plan-card">
+          <h3>Sanctum Free</h3>
+          <div class="plan-price">$0 / month</div>
+          <ul>
+            <li>20 AI analyses per month</li>
+            <li>Core build, meta, and progression Q&A</li>
+            <li>Live community hub access</li>
+            <li>Basic source citations</li>
+          </ul>
+          <button id="plans-free-btn" class="btn btn-ghost" type="button">Continue with Free</button>
+        </article>
+        <article class="plan-card featured">
+          <div class="plan-tag">Most used by push players</div>
+          <h3>Sanctum Pro</h3>
+          <div class="plan-price">$12 / month</div>
+          <ul>
+            <li>Unlimited AI analyses</li>
+            <li>Deep build autopsy with impact scoring</li>
+            <li>Patch and meta change alerts for your classes</li>
+            <li>Adaptive progression route planner</li>
+          </ul>
+          <button id="plans-pro-btn" class="btn btn-pro" type="button">Start 7-day Pro trial</button>
+        </article>
+      </div>
+      <p class="plans-footnote">No lock-in. Downgrade anytime. All plan upgrades preserve your history and prior analyses.</p>
+    </section>
+
     <section class="final-cta">
       <h2>Stop tab-hopping. Start progressing.</h2>
       <p>Ask one question, get a grounded answer, and know your next move instantly. Start with build diagnosis, meta summary, or progression planning.</p>
       <div class="actions">
-        <button class="btn btn-primary" type="button">Start with a build diagnosis</button>
-        <button class="btn btn-ghost" type="button">Explore live seasonal meta</button>
+        <button id="final-diagnosis-btn" class="btn btn-primary" type="button">Start with a build diagnosis</button>
+        <button id="final-pro-btn" class="btn btn-pro" type="button">Start 7-day Pro trial</button>
       </div>
     </section>
 
@@ -1156,6 +1347,13 @@
     const askButton = document.getElementById("hero-ask-btn");
     const sampleDiagnosisBtn = document.getElementById("sample-diagnosis-btn");
     const progressionShortcutBtn = document.getElementById("progression-shortcut-btn");
+    const viewPlansBtn = document.getElementById("view-plans-btn");
+    const navFreeBtn = document.getElementById("nav-free-btn");
+    const navProBtn = document.getElementById("nav-pro-btn");
+    const plansFreeBtn = document.getElementById("plans-free-btn");
+    const plansProBtn = document.getElementById("plans-pro-btn");
+    const finalDiagnosisBtn = document.getElementById("final-diagnosis-btn");
+    const finalProBtn = document.getElementById("final-pro-btn");
     const quickButtons = document.querySelectorAll(".quick-btn");
     const oracleQuestion = document.getElementById("oracle-question");
     const oracleAnswer = document.getElementById("oracle-answer");
@@ -1189,6 +1387,11 @@
         actions: "Replace one crit damage temper with resource generation. Move two paragon points into Tactical Rampage. Farm Grigoire before the next Pit push.",
         sources: ["Patch 2.4 notes", "Top 500 Pit logs", "Community sim data"],
       },
+      "Diagnose my build and rank my top 5 upgrades for Pit pushing": {
+        answer: "<strong>Deep build autopsy ready:</strong> Sanctum ranked your top five upgrades by expected Pit gain and detected two hidden survivability bottlenecks.",
+        actions: "Upgrade order: 1) chest defensive affix reroll, 2) glyph route correction, 3) resource temper swap, 4) boss farm target change, 5) elixir/paragon synergy alignment.",
+        sources: ["Gear impact model", "Top ladder breakpoints", "Live route efficiency tracker"],
+      },
     };
 
     function renderOracle(promptText) {
@@ -1218,6 +1421,13 @@
       }
     }
 
+    function scrollToPlans() {
+      const plans = document.getElementById("plans");
+      if (plans) {
+        plans.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
     promptButtons.forEach((button) => {
       button.addEventListener("click", () => {
         runPrompt(button.dataset.prompt || "");
@@ -1237,6 +1447,38 @@
 
     progressionShortcutBtn.addEventListener("click", () => {
       runPrompt("What should I upgrade next?", true);
+    });
+
+    viewPlansBtn.addEventListener("click", () => {
+      scrollToPlans();
+    });
+
+    navFreeBtn.addEventListener("click", () => {
+      runPrompt("What should I upgrade next?", true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    navProBtn.addEventListener("click", () => {
+      scrollToPlans();
+    });
+
+    plansFreeBtn.addEventListener("click", () => {
+      runPrompt("Best speedfarming build this season", true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    plansProBtn.addEventListener("click", () => {
+      runPrompt("Diagnose my build and rank my top 5 upgrades for Pit pushing", true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    finalDiagnosisBtn.addEventListener("click", () => {
+      runPrompt("Why does my Mighty Throw Barb fall off after Pit 90?", true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    finalProBtn.addEventListener("click", () => {
+      scrollToPlans();
     });
 
     input.addEventListener("keydown", (event) => {

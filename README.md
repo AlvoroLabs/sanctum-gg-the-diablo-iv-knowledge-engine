@@ -1,53 +1,84 @@
 # Sanctum.gg — Diablo IV Decision Engine
 
-Sanctum is designed as the **intelligent progression and decision engine for Diablo IV**, not another build database or static guide site.
+Sanctum is now a production-ready Next.js application with persisted progression intelligence data.
 
-It helps players answer the hardest practical questions:
+It is designed to answer:
 
-- Why is my build failing at this tier?
-- What should I upgrade first?
+- Why is my build failing?
+- What should I fix first?
 - What should I farm next?
-- Should I adapt this build or switch now?
-- What changed this season that affects me?
+- Can I push this tier now?
 
-## Product Direction
+## What is implemented
 
-Sanctum differentiates through:
+- Next.js App Router application (`app/`)
+- Persisted data layer with Prisma models (`prisma/schema.prisma`)
+- Validated diagnosis API (`POST /api/diagnose`)
+- Live data APIs (`GET /api/live`, `GET /api/diagnoses`)
+- Persisted recommendation queue and evidence metadata
+- Mobile-friendly command console and live intelligence UI
+- CI pipeline with install, typecheck, lint, build, and Netlify deploy
 
-- **Build diagnosis** (root cause + fix priority)
-- **Progression intelligence** (next-best-action planning)
-- **Seasonal intelligence** (re-entry and meta adaptation)
-- **Trust architecture** (reasoning, evidence, confidence)
-- **Persistent personalization** (player memory across seasons)
+## Data persistence
 
-See full docs:
+Persistence is implemented through Prisma.
 
-- [PLAN.md](./PLAN.md) — platform architecture and operating model
-- [PRODUCT_PRD.md](./PRODUCT_PRD.md) — full product requirements and UX specification
-- [ROADMAP.md](./ROADMAP.md) — v1/v2/v3 scope cut and delivery sequence
+Current default in `.env.example`:
 
-## Prototype
+- SQLite file database (`file:./prisma/dev.db`) for easy local setup
 
-`index.html` is a high-fidelity static prototype demonstrating:
+For production, set `DATABASE_URL` to PostgreSQL and run migrations/deploy scripts.
 
-- first-10-second onboarding
-- live intelligence hub UX
-- diagnosis and progression output patterns
-- trust, evidence, and confidence surfaces
+## Quick start
 
-Run locally:
+1. Install dependencies
 
 ```bash
-npx serve .
+npm install
 ```
 
-## Tech Direction
+2. Configure environment
 
-- **Current**: static HTML/CSS/JS prototype
-- **Target app**: Next.js 15 + Supabase + edge inference orchestration
-- **Core intelligence systems**: deterministic analyzers + evidence-grounded language layer
+```bash
+cp .env.example .env
+```
 
-## Deployment
+3. Generate Prisma client and create schema
 
-- Netlify config is in `netlify.toml`
-- CI workflow runs in `.github/workflows/ci.yml`
+```bash
+npm run prisma:generate
+npm run prisma:push
+```
+
+4. Seed demo data
+
+```bash
+npm run prisma:seed
+```
+
+5. Start the app
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Scripts
+
+- `npm run dev` — local development
+- `npm run build` — production build
+- `npm run start` — run built app
+- `npm run lint` — ESLint checks
+- `npm run typecheck` — TypeScript checks
+- `npm run prisma:generate` — generate Prisma client
+- `npm run prisma:push` — push schema to database
+- `npm run prisma:migrate` — deploy migrations in production
+- `npm run prisma:seed` — seed baseline signals and sample diagnosis
+
+## Core docs
+
+- [PLAN.md](./PLAN.md) — platform strategy and systems plan
+- [PRODUCT_PRD.md](./PRODUCT_PRD.md) — product requirements
+- [ROADMAP.md](./ROADMAP.md) — phased delivery plan
+- [COPY_DECK.md](./COPY_DECK.md) — messaging and UI copy system

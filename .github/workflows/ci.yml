@@ -11,46 +11,22 @@ permissions:
   contents: read
 
 jobs:
-  static-site-checks:
-    name: Static site checks
+  build-and-deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify required files exist
+      - name: Verify required files
         run: |
           test -f index.html
-          test -f README.md
+          test -f netlify.toml
 
-      - name: Validate landing page structure
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          html = Path("index.html").read_text(encoding="utf-8")
-
-          required_ids = ["hero-title", "start", "journeys", "alive", "difference", "plans"]
-          missing = [section_id for section_id in required_ids if f'id="{section_id}"' not in html]
-          if missing:
-              raise SystemExit(f"Missing required section IDs: {', '.join(missing)}")
-
-          title = re.search(r"<title>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
-          if not title:
-              raise SystemExit("Missing <title> tag in index.html")
-
-          prompt_count = html.count('class="prompt"')
-          if prompt_count < 3:
-              raise SystemExit(f"Expected at least 3 prompt chips, found {prompt_count}")
-
-          print("Static landing checks passed.")
-          PY
-
-      - name: Upload prototype artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: sanctum-landing-prototype
-          path: index.html
-          retention-days: 7
+      - name: Deploy to Netlify
+        if: github.ref == 'refs/heads/main'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: npx --yes netlify-cli deploy --dir=. --prod --message "Deploy from CI - ${{ github.sha }}"

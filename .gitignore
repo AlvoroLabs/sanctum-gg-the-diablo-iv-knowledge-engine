@@ -6,3 +6,6 @@ dist/
 .next/
 out/
 *.log
+
+# Local Netlify folder
+.netlify

@@ -29,6 +29,12 @@ This is currently a static prototype. To run locally:
 npx serve .
 ```
 
+## Automation
+
+- **CI (GitHub Actions)**: `.github/workflows/ci.yml` runs on pull requests, pushes to `main`, and manual dispatch.
+- **Netlify config**: `netlify.toml` defines static publish settings and SPA-style fallback redirects.
+- **Auto-deploy expectation**: Netlify must be connected to this repository with `main` as the production branch for deploys to trigger on merge.
+
 ## Project Structure
 
 ```

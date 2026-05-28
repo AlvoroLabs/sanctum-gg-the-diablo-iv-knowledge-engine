@@ -6,6 +6,9 @@ dist/
 .next/
 out/
 *.log
+tsconfig.tsbuildinfo
+prisma/*.db
+prisma/prisma/
 
 # Local Netlify folder
 .netlify

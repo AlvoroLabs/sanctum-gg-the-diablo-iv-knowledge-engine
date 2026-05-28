@@ -85,7 +85,7 @@ export default async function HomePage() {
           </p>
         </div>
         <ul className="trust-list">
-          <li>Issue -> Cause -> Impact -> Action output contract</li>
+          <li>Issue to Cause to Impact to Action output contract</li>
           <li>Confidence percentages and evidence references stored per report</li>
           <li>Recommendation priority queue persisted for follow-up workflows</li>
           <li>Extensible model for seasonal deltas and profile memory</li>
